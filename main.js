@@ -1,9 +1,10 @@
-console.log('G8V電視牆 伺服端 v1.0.0 by a0000778');
+console.log('G8V電視牆 伺服端 v1.0.1 by a0000778');
 var fs=require('fs');
 var path=require('path');
 
 var config=require('./config.js');
 
+var countConnect=0;
 var servers={}
 var control={
 	'mountHttp': function(method,path,func){
@@ -13,7 +14,18 @@ var control={
 	},
 	'mountWebSocket': function(protocol,func){
 		this.startWebSocket();
-		servers.webSocketRouter.mount('*',protocol,func);
+		servers.webSocketRouter.mount('*',protocol,function(request){
+			if(countConnect>=config.maxConnect){
+				request.reject(503,'在線人數達上限');
+				return;
+			}
+			countConnect++;
+			var link=request.accept(request.origin);
+			link.on('close',function(){
+				countConnect--;
+			});
+			func(link);
+		});
 		return this;
 	},
 	'startHttp': function(){
@@ -33,7 +45,7 @@ var control={
 				process.exit();
 			})
 		;
-		server.listen(config.port);
+		server.listen(config.port,config.ip);
 		return this;
 	},
 	'startWebSocket': function(){
