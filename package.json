@@ -1,0 +1,22 @@
+{
+	"name": "g8v_server",
+	"description": "G8V電視牆 伺服端",
+	"version": "1.0.0",
+	"license": "MIT Licence",
+	"author": "a0000778",
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:a0000778/g8v_server.git"
+	},
+	"keywords": ["g8v"],
+	"dependencies": {
+		"websocket": ">=1.0.8",
+		"formidable": ">=1.0.15",
+		"light-router": ">=0.1.2"
+	},
+	"main": "main.js",
+	"scripts": {
+		"start": "node main.js"
+	},
+	"readme": "G8V電視牆 伺服端，搭配 http://a0000778.github.io/g8v/ 使用"
+}
