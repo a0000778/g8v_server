@@ -14,6 +14,7 @@ function md5(data){
 var source={};
 source.ustream=(function(){
 	const format=/^(channel\/)?([-+_~.\d\w]|%[a-fA-F\d]{2})+$/;
+	const isChannelId=/^(channel\/)?(\d+)$/;
 	var cache={};
 	setInterval(function(cache){
 		var nowTime=new Date().getTime();
@@ -28,6 +29,12 @@ source.ustream=(function(){
 		if(!format.test(path)){
 			res.writeHead(400);
 			res.end();
+		}
+		var checkIsChannelId=path.match(isChannelId);
+		if(checkIsChannelId){
+			res.write(checkIsChannelId[2]);
+			res.end();
+			return;
 		}
 		var md5sum=md5(path);
 		var cacheResult=cache[md5sum];
