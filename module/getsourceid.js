@@ -2,8 +2,8 @@ var crypto=require('crypto');
 var http=require('http');
 var formidable=require('formidable');
 
-const cacheTime=3600000;//快取有效時間
-const cache404Time=600000;//找不到的快取時間
+const cacheTime=3600000;//快取有效時間(毫秒)
+const cache404Time=600000;//找不到的快取時間(毫秒)
 const formLimit={
 	'maxFields': 5,
 	'maxFieldsSize': 1024
