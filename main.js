@@ -1,4 +1,4 @@
-console.log('G8V電視牆 伺服端 v1.0.5 by a0000778');
+console.log('G8V電視牆 伺服端 v1.0.6 by a0000778');
 var fs=require('fs');
 var path=require('path');
 
@@ -33,6 +33,7 @@ var control={
 		if(!resources.db){
 			resources.db=require('mysql').createConnection({
 				'host': config.db.host,
+				'port': config.db.port,
 				'user': config.db.user,
 				'password': config.db.pass,
 				'database': config.db.name
@@ -79,14 +80,16 @@ var control={
 		if((at=loadingModule.indexOf(moduleName))<0) return;
 		loadingModule.splice(at,1);
 		if(loadingModule.length) return;
-		delete loadingModule;
+		delete loadingModule,G8VModule.loading;
 		servers.http && servers.http.listen(config.port,config.ip);
 		console.log('載入完畢！');
 	}
 };
 
-var G8VModule={};
-var loadingModule=[];
+var G8VModule={
+	'loading': true
+};
+var loadingModule=['loading'];
 fs.readdirSync('./module').forEach(function(name){
 	name=name.match(/^(\w+)\.js$/);
 	if(name && fs.statSync(name[0]=path.join('.','module',name[0])).isFile()){
@@ -96,6 +99,8 @@ fs.readdirSync('./module').forEach(function(name){
 		this[name[1]].load(control);
 	}
 },G8VModule);
+control.onLoad('loading');
+
 process.on('error',function(e){
 	console.error('全域錯誤: %s',e.toString());
 })

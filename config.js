@@ -10,6 +10,7 @@ module.exports={
 	
 	'db':{
 		'host': 'localhost',
+		'port': 3306,
 		'user': 'g8v',
 		'pass': '',
 		'name': 'g8v'
