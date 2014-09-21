@@ -81,5 +81,6 @@ module.exports={
 				res.end();
 			});
 		});
+		control.onLoad('getsourceid');
 	}
 };

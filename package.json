@@ -12,7 +12,8 @@
 	"dependencies": {
 		"websocket": ">=1.0.8",
 		"formidable": ">=1.0.15",
-		"light-router": ">=0.1.2"
+		"light-router": ">=0.1.2",
+		"mysql": ">=2.5.0"
 	},
 	"main": "main.js",
 	"scripts": {
