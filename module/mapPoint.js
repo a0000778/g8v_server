@@ -274,7 +274,7 @@ module.exports={
 			'CREATE TABLE IF NOT EXISTS `maps` (\
 				`id` int(10) unsigned NOT NULL AUTO_INCREMENT,\
 				`name` char(32) NOT NULL,\
-				`lastReadTime` int(10) unsigned NOT NULL AUTO_INCREMENT,\
+				`lastReadTime` int(10) unsigned NOT NULL,\
 				PRIMARY KEY (`id`),\
 				KEY `mapId` (`name`)\
 			) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT=\'地圖\' AUTO_INCREMENT=1;',
