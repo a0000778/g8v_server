@@ -46,22 +46,23 @@ Map.prototype.join=function(link){
 	points=undefined;
 	delete point,points;
 	var _=this;
-	link.on('message',function(msg){
-		msg=JSON.parse(msg);
+	link.on('message',function(data){
+		if(data.type!='utf8') return;
+		var msg=JSON.parse(data.utf8Data);
 		switch(msg.action){
 			case 'move':
 				if(Number.isNaN(msg.pos[0]) || Number.isNaN(msg.pos[1]) || !Array.isArray(msg.args))
 					return;
-				map.movePoint(msg.name,msg.pos,msg.module,msg.args);
+				_.movePoint(msg.name,msg.pos,msg.module,msg.args);
 			break;
 			case 'delete':
-				map.deletePoint(msg.name);
+				_.deletePoint(msg.name);
 			break;	
 		}
 	});
 	link.on('close',function(){
 		_.lastReadTime=new Date().getTime();
-		_.link.splice(_.links.indexOf(link),1);
+		_.links.splice(_.links.indexOf(link),1);
 		_=link=undefined;
 		delete _,link;
 	});
