@@ -37,6 +37,7 @@ Map.prototype.join=function(link){
 	for(var hashName in points){
 		point=points[hashName];
 		link.send(JSON.stringify({
+			'action': 'move',
 			'name': point.name,
 			'pos': point.pos,
 			'module': point.module,
