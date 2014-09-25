@@ -342,7 +342,7 @@ module.exports={
 			});
 		});
 		control.mountWebSocket('mapPoint',/^\/\w+$/,function(url,link){
-			var name=url.substring(1,url.length);
+			var name=url.pathname.substring(1,url.pathname.length);
 			getMap(name).join(link);
 		});
 	}
