@@ -250,7 +250,7 @@ setInterval(function(){
 	});
 },checkLifeTime);
 //退出前寫出記憶體
-process.on('exit',function(){
+process.on('SIGINT',function(){
 	for(var hashName in maps){
 		maps[hashName].links.forEach(function(link){
 			link.close();
