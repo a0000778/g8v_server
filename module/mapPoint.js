@@ -216,7 +216,7 @@ var writeDB=(function(){
 				else
 					createMap(hashName,writeMap);
 			}
-			if(map.link.length && map.lastReadTime<outTime){
+			if(map.links.length && map.lastReadTime<outTime){
 				maps[hashName]=undefined;
 				delete maps[hashName];
 			}
