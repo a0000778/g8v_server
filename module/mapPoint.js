@@ -73,9 +73,9 @@ Map.prototype.movePoint=function(name,pos,module,args){
 	if(!(point=this.points[hashName])){
 		point=this.points[hashName]={'name':name};
 	}
-	pos!=undefined && point.pos=pos;
-	module!=undefined && point.module=module;
-	args!=undefined && point.args=args;
+	if(pos!=undefined) point.pos=pos;
+	if(module!=undefined) point.module=module;
+	if(args!=undefined) point.args=args;
 	this.lastUpdateTime=new Date().getTime();
 	if(this.updatedPoints.indexOf(hashName)<0)
 		this.updatedPoints.push(hashName);
