@@ -146,14 +146,18 @@ function getMap(name){
 var writeDB=(function(){
 	var createMap=function(hashName,callback){
 		var map=maps[hashName];
-		DB.query('INSERT INTO `maps` (`name`,`lastReadTime`) VALUE (?)',[hashName,map.lastReadTime],function(err,result){
-			if(err){
-				console.log('[mapPoint] 無法建立地圖 hashName=%s',hashName);
-				return;
+		DB.query(
+			'INSERT INTO `maps` (`name`,`lastReadTime`) VALUE (?)',
+			[hashName,map.Math.floor(lastReadTime/1000)],
+			function(err,result){
+				if(err){
+					console.log('[mapPoint] 無法建立地圖 hashName=%s',hashName);
+					return;
+				}
+				map.id=result.insertId;
+				callback(hashName);
 			}
-			map.id=result.insertId;
-			callback(hashName);
-		});
+		);
 	};
 	var writeMap=function(hashName){
 		var map=maps[hashName];
