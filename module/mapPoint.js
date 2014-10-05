@@ -176,34 +176,39 @@ var writeDB=(function(){
 				--waitQueryCount || callback();
 			}
 		);
-		map.updatedPoints.forEach(function(key,index,o){
-			var point=this[key];
-			waitQueryCount++;
-			if(point.id)
-				DB.query(
-					'UPDATE `points` SET `posX`=?, `posY`=?, `module`=?,`args`=? WHERE `id`=?',
-					[point.pos[0],point.pos[1],point.module,JSON.stringify(point.args),point.id],
-					function(err){
-						if(err){
-							console.log('[mapPoint] 更新標記點失敗 id=%d',point.id);
+		if(map.updatedPoints.length){
+			map.updatedPoints.forEach(function(key,index,o){
+				var point=this[key];
+				waitQueryCount++;
+				if(point.id)
+					DB.query(
+						'UPDATE `points` SET `posX`=?, `posY`=?, `module`=?,`args`=? WHERE `id`=?',
+						[point.pos[0],point.pos[1],point.module,JSON.stringify(point.args),point.id],
+						function(err){
+							if(err){
+								console.log('[mapPoint] 更新標記點失敗 id=%d',point.id);
+							}
+							--waitQueryCount || callback();
 						}
-						--waitQueryCount || callback();
-					}
-				);
-			else
-				DB.query(
-					'INSERT INTO `points` (`mapId`,`posX`,`posY`,`module`,`args`) VALUE (?)',
-					[mapId,point.pos[0],point.pos[1],point.module,JSON.stringify(point.args),point.id],
-					function(err,result){
-						if(err){
-							console.log('[mapPoint] 新增標記點失敗 map=%s,name=%s',hashName,point.name);
-							return;
+					);
+				else
+					DB.query(
+						'INSERT INTO `points` (`mapId`,`posX`,`posY`,`module`,`args`) VALUE (?)',
+						[mapId,point.pos[0],point.pos[1],point.module,JSON.stringify(point.args),point.id],
+						function(err,result){
+							if(err){
+								console.log('[mapPoint] 新增標記點失敗 map=%s,name=%s',hashName,point.name);
+								return;
+							}
+							point.id=result.insertId;
+							--waitQueryCount || callback();
 						}
-						point.id=result.insertId;
-						--waitQueryCount || callback();
-					}
-				);
-		},map.points);
+					);
+				point=undefined;
+				delete point;
+			},map.points);
+			map.updatedPoints=[];
+		}
 		if(map.deletedPoints.length){
 			var list=map.deletedPoints;
 			waitQueryCount++;
