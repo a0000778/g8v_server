@@ -149,7 +149,7 @@ var writeDB=(function(){
 		var map=maps[hashName];
 		DB.query(
 			'INSERT INTO `maps` (`name`,`lastReadTime`) VALUE (?)',
-			[hashName,map.Math.floor(lastReadTime/1000)],
+			[hashName,map.Math.floor(map.lastReadTime/1000)],
 			function(err,result){
 				if(err){
 					console.log('[mapPoint] 無法建立地圖 hashName=%s',hashName);
