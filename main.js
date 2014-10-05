@@ -77,30 +77,54 @@ var control={
 			process.exit();
 		}
 		var at;
-		if((at=loadingModule.indexOf(moduleName))<0) return;
-		loadingModule.splice(at,1);
-		if(loadingModule.length) return;
-		delete loadingModule,G8VModule.loading;
+		if((at=waitingModule.indexOf(moduleName))<0) return;
+		waitingModule.splice(at,1);
+		if(waitingModule.length) return;
+		delete G8VModule.loading;
 		servers.http && servers.http.listen(config.port,config.ip);
 		console.log('載入完畢！');
+	},
+	'onUnload': function(moduleName){
+		if(!G8VModule[moduleName])
+			console.error('模組 %s 未載入卻提示卸載完成', moduleName);
+		var at;
+		if((at=waitingModule.indexOf(moduleName))<0) return;
+		waitingModule.splice(at,1);
+		if(waitingModule.length) return;
+		servers.webSocket && servers.webSocket.shutDown();
+		console.log('卸載完畢');
+		process.exit();
 	}
 };
 
 var G8VModule={
 	'loading': true
 };
-var loadingModule=['loading'];
+var waitingModule=['loading'];
 fs.readdirSync('./module').forEach(function(name){
 	name=name.match(/^(\w+)\.js$/);
 	if(name && fs.statSync(name[0]=path.join('.','module',name[0])).isFile()){
 		console.log('載入模組 %s ...',name[1]);
-		loadingModule.push(name[1]);
+		waitingModule.push(name[1]);
 		this[name[1]]=require('./'+name[0]);
 		this[name[1]].load(control);
 	}
 },G8VModule);
 control.onLoad('loading');
 
+process.once('SIGINT',function(e){
+	process.on('SIGINT',function(){
+		console.log('卸載中...');
+	});
+	console.log('開始卸載...');
+	servers.http && servers.http.close();
+	var mod;
+	for(mod in G8VModule){
+		console.log('關閉模組 %s ...',mod);
+		waitingModule.push(mod);
+		G8VModule[mod].unload(control);
+	}
+});
 process.on('error',function(e){
 	console.error('全域錯誤: %s',e.toString());
 })

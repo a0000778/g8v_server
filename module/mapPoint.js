@@ -49,6 +49,7 @@ Map.prototype.join=function(link){
 	var _=this;
 	link.on('message',function(data){
 		if(data.type!='utf8') return;
+		console.log(data.utf8Data);
 		var msg=JSON.parse(data.utf8Data);
 		switch(msg.action){
 			case 'move':
@@ -155,13 +156,16 @@ var writeDB=(function(){
 					return;
 				}
 				map.id=result.insertId;
-				callback(hashName);
+				writeMap(hashName,callback);
 			}
 		);
 	};
-	var writeMap=function(hashName){
+	var writeMap=function(hashName,callback){
+		var waitQueryCount=0;
 		var map=maps[hashName];
 		var mapId=map.id;
+		map.lastLogTime=new Date.getTime();
+		waitQueryCount++;
 		DB.query(
 			'UPDATE `maps` SET `lastReadTime`=? WHERE `id`=?',
 			[map.lastReadTime,mapId],
@@ -169,10 +173,12 @@ var writeDB=(function(){
 				if(err){
 					console.log('[mapPoint] 地圖最後讀取時間更新失敗 id=%d',mapId);
 				}
+				--waitQueryCount || callback();
 			}
 		);
 		map.updatedPoints.forEach(function(key,index,o){
 			var point=this[key];
+			waitQueryCount++;
 			if(point.id)
 				DB.query(
 					'UPDATE `points` SET `posX`=?, `posY`=?, `module`=?,`args`=? WHERE `id`=?',
@@ -181,6 +187,7 @@ var writeDB=(function(){
 						if(err){
 							console.log('[mapPoint] 更新標記點失敗 id=%d',point.id);
 						}
+						--waitQueryCount || callback();
 					}
 				);
 			else
@@ -193,32 +200,39 @@ var writeDB=(function(){
 							return;
 						}
 						point.id=result.insertId;
+						--waitQueryCount || callback();
 					}
 				);
 		},map.points);
 		if(map.deletedPoints.length){
 			var list=map.deletedPoints;
+			waitQueryCount++;
 			DB.query('DELETE FROM `point` WHERE `id` IN (?)',list,function(err){
 				if(err){
 					console.log('[mapPoint] 刪除標記點失敗 id=%s',list.join(','));
 				}
 				list=undefined;
 				delete list;
+				--waitQueryCount || callback();
 			});
 			map.deletedPoints=[];
 		}
-		
 	};
-	return function(){
+	return function(callback){
+		var jobCount=0;
+		var cb=function(){
+			--jobCount || callback();
+		};
 		var outTime=new Date().getTime()-cacheTime;
 		var hashName,map;
 		for(hashName in maps){
 			map=maps[hashName];
 			if(map.updatedPoints.length || map.deletedPoints.length){
+				jobCount++;
 				if(map.id)
-					writeMap(hashName);
+					writeMap(hashName,cb);
 				else
-					createMap(hashName,writeMap);
+					createMap(hashName,cb);
 			}
 			if(map.links.length && map.lastReadTime<outTime){
 				maps[hashName]=undefined;
@@ -253,15 +267,6 @@ setInterval(function(){
 		});
 	});
 },checkLifeTime);
-//退出前寫出記憶體
-process.on('SIGINT',function(){
-	for(var hashName in maps){
-		maps[hashName].links.forEach(function(link){
-			link.close();
-		});
-	}
-	writeDB();
-});
 
 module.exports={
 	'load': function(control){
@@ -350,6 +355,16 @@ module.exports={
 		control.mountWebSocket('mapPoint',/^\/\w+$/,function(url,link){
 			var name=url.pathname.substring(1,url.pathname.length);
 			getMap(name).join(link);
+		});
+	},
+	'unload': function(control){
+		for(var hashName in maps){
+			maps[hashName].links.forEach(function(link){
+				link.close();
+			});
+		}
+		writeDB(function(){
+			control.onUnload('mapPoint');
 		});
 	}
 };

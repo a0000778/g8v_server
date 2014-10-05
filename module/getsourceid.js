@@ -82,5 +82,8 @@ module.exports={
 			});
 		});
 		control.onLoad('getsourceid');
+	},
+	'unload': function(control){
+		control.onUnload('getsourceid');
 	}
 };
