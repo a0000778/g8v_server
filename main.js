@@ -122,6 +122,7 @@ process.once('SIGINT',function(e){
 	G8VModule.unloading=true;
 	var mod;
 	for(mod in G8VModule){
+		if(mod==='unloading') return;
 		console.log('關閉模組 %s ...',mod);
 		waitingModule.push(mod);
 		G8VModule[mod].unload(control);
