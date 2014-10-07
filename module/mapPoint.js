@@ -226,7 +226,7 @@ var writeDB=(function(){
 	return function(callback){
 		var jobCount=0;
 		var cb=function(){
-			--jobCount || callback();
+			--jobCount || callback===undefined || callback();
 		};
 		var outTime=new Date().getTime()-cacheTime;
 		var hashName,map;
