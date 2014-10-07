@@ -164,7 +164,7 @@ var writeDB=(function(){
 		var waitQueryCount=0;
 		var map=maps[hashName];
 		var mapId=map.id;
-		map.lastLogTime=new Date.getTime();
+		map.lastLogTime=new Date().getTime();
 		waitQueryCount++;
 		DB.query(
 			'UPDATE `maps` SET `lastReadTime`=? WHERE `id`=?',
