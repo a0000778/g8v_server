@@ -53,8 +53,10 @@ Map.prototype.join=function(link){
 		var msg=JSON.parse(data.utf8Data);
 		switch(msg.action){
 			case 'move':
-				if(Number.isNaN(msg.pos[0]) || Number.isNaN(msg.pos[1]) || !Array.isArray(msg.args))
-					return;
+				if(msg.name===undefined) return;
+				if(msg.pos!==undefined && (Number.isNaN(msg.pos[0]) || Number.isNaN(msg.pos[1]))) return;
+				if(msg.module!==undefined && 'string'!==typeof msg.module) return;
+				if(!Array.isArray(msg.args)) return;
 				_.movePoint(msg.name,msg.pos,msg.module,msg.args);
 			break;
 			case 'delete':
@@ -70,12 +72,18 @@ Map.prototype.join=function(link){
 	});
 }
 Map.prototype.movePoint=function(name,pos,module,args){
+	if(name===undefined) return;
 	var hashName=md5(name);
 	var point
 	if(!(point=this.points[hashName])){
-		point=this.points[hashName]={'name':name};
-	}
-	if(pos!=undefined) point.pos=pos;
+		if(pos===undefined) return;
+		point=this.points[hashName]={
+			'name': name,
+			'pos': pos,
+			'module': '',
+			'args': []
+		};
+	}else if(pos!=undefined) point.pos=pos;
 	if(module!=undefined) point.module=module;
 	if(args!=undefined) point.args=args;
 	this.lastUpdateTime=new Date().getTime();
