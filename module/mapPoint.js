@@ -194,7 +194,7 @@ var writeDB=(function(){
 					);
 				else
 					DB.query(
-						'INSERT INTO `points` (`mapId`,`name`,`posX`,`posY`,`module`,`args`) VALUE (?,?,?,?,?)',
+						'INSERT INTO `points` (`mapId`,`name`,`posX`,`posY`,`module`,`args`) VALUE (?,?,?,?,?,?)',
 						[mapId,point.name,point.pos[0],point.pos[1],point.module,JSON.stringify(point.args),point.id],
 						function(err,result){
 							if(err)
