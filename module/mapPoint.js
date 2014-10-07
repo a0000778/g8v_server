@@ -138,15 +138,25 @@ function getMap(name){
 			}
 			map.id=points[0].mapId;
 			points.forEach(function(point){
-				var name=point.name;
-				if(this.points[name] || this.deletedPoints.indexOf(name)>=0)
+				var hashName=md5(point.name);
+				if(this.points[hashName]){
+					this.points[hashName].id=point.id;
 					return;
-				this.points[name]={
+				}
+				point=this.points[hashName]={
 					'id': point.id,
+					'name': point.name
 					'pos': [point.posX,point.posY],
 					'module': point.module,
 					'args': JSON.parse(point.args)
 				};
+				this.sendAll({
+					'action': 'move',
+					'name': point.name,
+					'pos': point.pos,
+					'module': point.module,
+					'args': point.args
+				});
 			},map);
 		}
 	);
