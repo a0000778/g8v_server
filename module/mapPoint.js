@@ -185,27 +185,27 @@ var writeDB=(function(){
 						'UPDATE `points` SET `posX`=?, `posY`=?, `module`=?,`args`=? WHERE `id`=?',
 						[point.pos[0],point.pos[1],point.module,JSON.stringify(point.args),point.id],
 						function(err){
-							if(err){
+							if(err)
 								console.log('[mapPoint] 更新標記點失敗 id=%d',point.id);
-							}
+							point=undefined;
+							delete point;
 							--waitQueryCount || callback();
 						}
 					);
 				else
 					DB.query(
-						'INSERT INTO `points` (`mapId`,`posX`,`posY`,`module`,`args`) VALUE (?,?,?,?,?)',
-						[mapId,point.pos[0],point.pos[1],point.module,JSON.stringify(point.args),point.id],
+						'INSERT INTO `points` (`mapId`,`name`,`posX`,`posY`,`module`,`args`) VALUE (?,?,?,?,?)',
+						[mapId,point.name,point.pos[0],point.pos[1],point.module,JSON.stringify(point.args),point.id],
 						function(err,result){
-							if(err){
+							if(err)
 								console.log('[mapPoint] 新增標記點失敗 map=%s,name=%s',hashName,point.name);
-								return;
-							}
-							point.id=result.insertId;
+							else
+								point.id=result.insertId;
+							point=undefined;
+							delete point;
 							--waitQueryCount || callback();
 						}
 					);
-				point=undefined;
-				delete point;
 			},map.points);
 			map.updatedPoints=[];
 		}
