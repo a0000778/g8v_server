@@ -148,7 +148,7 @@ var writeDB=(function(){
 	var createMap=function(hashName,callback){
 		var map=maps[hashName];
 		DB.query(
-			'INSERT INTO `maps` (`name`,`lastReadTime`) VALUE (?)',
+			'INSERT INTO `maps` (`name`,`lastReadTime`) VALUE (?,?)',
 			[hashName,Math.floor(map.lastReadTime/1000)],
 			function(err,result){
 				if(err){
@@ -193,7 +193,7 @@ var writeDB=(function(){
 					);
 				else
 					DB.query(
-						'INSERT INTO `points` (`mapId`,`posX`,`posY`,`module`,`args`) VALUE (?)',
+						'INSERT INTO `points` (`mapId`,`posX`,`posY`,`module`,`args`) VALUE (?,?,?,?,?)',
 						[mapId,point.pos[0],point.pos[1],point.module,JSON.stringify(point.args),point.id],
 						function(err,result){
 							if(err){
@@ -212,7 +212,7 @@ var writeDB=(function(){
 		if(map.deletedPoints.length){
 			var list=map.deletedPoints;
 			waitQueryCount++;
-			DB.query('DELETE FROM `point` WHERE `id` IN (?)',list,function(err){
+			DB.query('DELETE FROM `point` WHERE `id` IN (?)',[list],function(err){
 				if(err){
 					console.log('[mapPoint] 刪除標記點失敗 id=%s',list.join(','));
 				}
