@@ -168,7 +168,7 @@ var writeDB=(function(){
 		waitQueryCount++;
 		DB.query(
 			'UPDATE `maps` SET `lastReadTime`=? WHERE `id`=?',
-			[map.lastReadTime,mapId],
+			[Math.floor(map.lastReadTime/1000),mapId],
 			function(err){
 				if(err){
 					console.log('[mapPoint] 地圖最後讀取時間更新失敗 id=%d',mapId);
