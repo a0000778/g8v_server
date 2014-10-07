@@ -145,7 +145,7 @@ function getMap(name){
 				}
 				point=this.points[hashName]={
 					'id': point.id,
-					'name': point.name
+					'name': point.name,
 					'pos': [point.posX,point.posY],
 					'module': point.module,
 					'args': JSON.parse(point.args)
