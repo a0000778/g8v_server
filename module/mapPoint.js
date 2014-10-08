@@ -266,6 +266,7 @@ var writeDB=(function(){
 		}
 		map=undefined;
 		delete map,hashName;
+		jobCount || callback===undefined || callback();
 	};
 })();
 
