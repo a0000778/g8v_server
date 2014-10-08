@@ -70,6 +70,7 @@ Map.prototype.join=function(link){
 		_=link=undefined;
 		delete _,link;
 	});
+	link.send('{"action":"viewAll"}');
 }
 Map.prototype.movePoint=function(name,pos,module,args){
 	if(name===undefined) return;
@@ -158,6 +159,7 @@ function getMap(name){
 					'args': point.args
 				});
 			},map);
+			this.sendAll({'action': 'viewAll'});
 		}
 	);
 	return map;
