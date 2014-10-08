@@ -159,7 +159,7 @@ function getMap(name){
 					'args': point.args
 				});
 			},map);
-			this.sendAll({'action': 'viewAll'});
+			map.sendAll({'action': 'viewAll'});
 		}
 	);
 	return map;
