@@ -31,12 +31,13 @@ var control={
 	},
 	'connectDB': function(){
 		if(!resources.db){
-			resources.db=require('mysql').createConnection({
+			resources.db=require('mysql').createPool({
 				'host': config.db.host,
 				'port': config.db.port,
 				'user': config.db.user,
 				'password': config.db.pass,
-				'database': config.db.name
+				'database': config.db.name,
+				'connectionLimit': config.db.connectionLimit
 			});
 		}
 		return resources.db;

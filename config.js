@@ -13,7 +13,8 @@ module.exports={
 		'port': 3306,
 		'user': 'g8v',
 		'pass': '',
-		'name': 'g8v'
+		'name': 'g8v',
+		'connectionLimit': 10
 	},
 	
 	'maxConnect': 500//WebSocket 最大連線數
