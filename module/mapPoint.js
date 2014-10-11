@@ -345,7 +345,7 @@ module.exports={
 				process.exit();
 			}
 		);
-		control.mountHttp('post','/:name(\\w+)',function(req,res){
+		control.mountHttp('post','/mapPoint/:name(\\w+)',function(req,res){
 			var name=req.params.name;
 			var map=getMap(name);
 			var form=new formidable.IncomingForm(formLimit);
