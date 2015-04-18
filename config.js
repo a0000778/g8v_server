@@ -17,5 +17,11 @@ module.exports={
 		'connectionLimit': 10
 	},
 	
-	'maxConnect': 500//WebSocket 最大連線數
+	'maxConnect': 500,//WebSocket 最大連線數
+	
+	'mod_urlShorten': {
+		'bitly_user': '',
+		'bitly_apiKey': '',
+		'allowPreifx': 'http://a0000778.github.io/g8v/#'
+	}
 }

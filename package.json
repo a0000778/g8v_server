@@ -10,6 +10,7 @@
 	},
 	"keywords": ["g8v"],
 	"dependencies": {
+		"bitly": ">=1.2.5",
 		"websocket": ">=1.0.8",
 		"formidable": ">=1.0.15",
 		"light-router": ">=0.1.2",
