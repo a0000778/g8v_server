@@ -1,4 +1,4 @@
-console.log('G8V電視牆 伺服端 v1.0.6 by a0000778');
+console.log('G8V電視牆 伺服端 v1.1.0 by a0000778');
 var fs=require('fs');
 var path=require('path');
 
