@@ -22,6 +22,8 @@ module.exports={
 	'mod_urlShorten': {
 		'bitly_user': '',
 		'bitly_apiKey': '',
-		'allowPreifx': 'http://a0000778.github.io/g8v/#'
+		'allowPreifx': 'http://a0000778.github.io/g8v/#',
+		'cacheSize': 5000,
+		'cacheExpire': 600
 	}
 }

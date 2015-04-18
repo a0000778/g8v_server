@@ -1,7 +1,7 @@
 {
 	"name": "g8v_server",
 	"description": "G8V電視牆 伺服端",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"license": "MIT Licence",
 	"author": "a0000778",
 	"repository": {
