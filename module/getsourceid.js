@@ -29,6 +29,7 @@ source.ustream=(function(){
 		if(!format.test(path)){
 			res.writeHead(400);
 			res.end();
+			return;
 		}
 		var checkIsChannelId=path.match(isChannelId);
 		if(checkIsChannelId){
