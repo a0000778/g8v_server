@@ -75,7 +75,7 @@ source.youtube=(function(){
 	};
 	setInterval(function(){
 		var now=Date.now();
-		cache.checkTime.reduce(function(r,checkTime,index){
+		cache.expire.reduce(function(r,checkTime,index){
 			if(expire<now)
 				r.push(index);
 			return r;
